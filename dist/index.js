@@ -23,7 +23,7 @@ import require$$1$3 from 'url';
 import require$$3$1 from 'zlib';
 import require$$6 from 'string_decoder';
 import require$$0$7 from 'diagnostics_channel';
-import require$$2$2 from 'child_process';
+import require$$2$2, { spawn } from 'child_process';
 import require$$6$1 from 'timers';
 
 var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
@@ -27286,6 +27286,13 @@ async function run() {
 
     // Set outputs for other workflow steps to use
     coreExports.setOutput('time', new Date().toTimeString());
+
+    // Spawn a child process that runs 'sleep 60' but detaches and allows future steps to continue
+    const child = spawn('sleep', ['60'], { detached: true, stdio: 'ignore' });
+    child.unref();
+
+    coreExports.debug(`Spawned detached child process with PID: ${child.pid}`);
+    coreExports.setOutput('child_pid', child.pid.toString());
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) coreExports.setFailed(error.message);
