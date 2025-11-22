@@ -26,6 +26,9 @@ export async function run() {
     // Spawn a child process that runs 'sleep 60' but detaches and allows future steps to continue
     const child = spawn('sleep', ['60'], { detached: true, stdio: 'ignore' })
     child.unref()
+
+    core.debug(`Spawned detached child process with PID: ${child.pid}`)
+    core.setOutput('child_pid', child.pid.toString())
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
