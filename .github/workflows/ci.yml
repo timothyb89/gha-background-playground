@@ -68,3 +68,23 @@ jobs:
 
       - name: Print time again
         run: date
+
+      - name: Check if sleeping process is still running
+        run: |
+          if pgrep -x "sleep" > /dev/null
+          then
+              echo "Sleep process is still running"
+          else
+              echo "Sleep process is not running"
+          fi
+
+      - name: Wait for 70 seconds to see if background process keeps running
+        run: sleep 70
+      - name: Check again if sleeping process is still running
+        run: |
+          if pgrep -x "sleep" > /dev/null
+          then
+              echo "Sleep process is still running"
+          else
+              echo "Sleep process is not running"
+          fi
