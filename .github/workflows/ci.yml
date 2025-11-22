@@ -90,6 +90,9 @@ jobs:
               echo "Sleep process is not running"
           fi
 
+      - name: Fetch the HTTP endpoint
+        run: curl -v http://localhost:3000
+
       - name: Wait for 70 seconds to see if background process keeps running
         run: sleep 70
       - name: Check again if sleeping process is still running
