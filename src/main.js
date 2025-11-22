@@ -1,6 +1,8 @@
 import * as core from '@actions/core'
 import { wait } from './wait.js'
 
+import { spawn } from 'child_process'
+
 /**
  * The main function for the action.
  *
@@ -20,6 +22,10 @@ export async function run() {
 
     // Set outputs for other workflow steps to use
     core.setOutput('time', new Date().toTimeString())
+
+    // Spawn a child process that runs 'sleep 60' but detaches and allows future steps to continue
+    const child = spawn('sleep', ['60'], { detached: true, stdio: 'ignore' })
+    child.unref()
   } catch (error) {
     // Fail the workflow run if an error occurs
     if (error instanceof Error) core.setFailed(error.message)
