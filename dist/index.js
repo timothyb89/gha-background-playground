@@ -27287,8 +27287,15 @@ async function run() {
     // Set outputs for other workflow steps to use
     coreExports.setOutput('time', new Date().toTimeString());
 
-    // Spawn a child process that runs 'sleep 60' but detaches and allows future steps to continue
-    const child = spawn('sleep', ['60'], { detached: true, stdio: 'ignore' });
+    // Spawn a detached child Node.js process that runs a minimal HTTP server
+    const child = spawn(
+      process.execPath,
+      [
+        '-e',
+        "require('http').createServer((req,res)=>{res.writeHead(200,{'Content-Type':'text/plain'});res.end('hello world');}).listen(3000)"
+      ],
+      { detached: true, stdio: 'ignore' }
+    );
     child.unref();
 
     coreExports.debug(`Spawned detached child process with PID: ${child.pid}`);
